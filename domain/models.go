@@ -35,3 +35,12 @@ type Rental struct {
 	Location        Location `gorm:"embedded" json:"location"`
 	User            User     `json:"user"`
 }
+
+type Pagination struct {
+	Limit      int      `json:"limit"`
+	Offset     int      `json:"offset"`
+	Page       int      `json:"page"`
+	TotalRows  int64    `json:"total_rows"`
+	TotalPages int      `json:"total_pages"`
+	Rows       []Rental `json:"rows"`
+}

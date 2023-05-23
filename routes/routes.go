@@ -36,5 +36,11 @@ func (pg *PgHandle) GetRental(w http.ResponseWriter, r *http.Request) {
 }
 
 func (pg *PgHandle) GetRentals(w http.ResponseWriter, r *http.Request) {
+	filters, err := domain.MakeRentalFilter(r.URL.Query())
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
 
+	println(filters)
 }
