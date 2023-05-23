@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+	"math"
 	"net/url"
 	"strconv"
 	"strings"
@@ -167,4 +168,45 @@ func FindRentalById(db gorm.DB, id string) (Rental, error) {
 
 	err := db.Preload("User").First(&rental, "id = ?", id).Error
 	return rental, err
+}
+
+func FindRentalsWithFilter(db gorm.DB, filters RentalFilter) (Pagination, error) {
+	var rentals []Rental
+
+	query := db.Preload("User")
+
+	if filters.PriceMax != nil {
+		query = query.Where("price_per_day < ?", &filters.PriceMax)
+	}
+
+	if filters.PriceMin != nil {
+		query = query.Where("price_per_day > ?", &filters.PriceMin)
+	}
+
+	query = query.Limit(filters.Limit)
+
+	if filters.Offset != 0 {
+		query = query.Offset(filters.Offset)
+	}
+
+	err := query.Find(&rentals).Error
+
+	var totalRows int64
+	db.Model(rentals).Count(&totalRows)
+
+	page := (filters.Offset / filters.Limit)
+	if page == 0 {
+		page = 1
+	}
+
+	res := Pagination{
+		Limit:      filters.Limit,
+		Offset:     filters.Offset,
+		Page:       page,
+		TotalRows:  totalRows,
+		TotalPages: int(math.Ceil(float64(totalRows) / float64(filters.Limit))),
+		Rows:       rentals,
+	}
+
+	return res, err
 }

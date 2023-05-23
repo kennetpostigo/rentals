@@ -42,5 +42,11 @@ func (pg *PgHandle) GetRentals(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	println(filters)
+	rentals, err := domain.FindRentalsWithFilter(*pg.DB, *filters)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	render.JSON(w, r, rentals)
 }
