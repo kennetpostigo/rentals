@@ -20,6 +20,8 @@ type RentalFilter struct {
 	Sort     string
 }
 
+const MILE = 1609.344
+
 var SORT_DB_MAP = map[string]string{
 	"id":      "id",
 	"name":    "name",
@@ -188,6 +190,17 @@ func FindRentalsWithFilter(db gorm.DB, filters RentalFilter) (Pagination, error)
 	if filters.Offset != 0 {
 		query = query.Offset(filters.Offset)
 	}
+
+	if len(filters.IDs) > 0 {
+		query = query.Where("id IN (?)", filters.IDs)
+	}
+
+	if len(filters.Near) == 2 {
+		// Note: I'm not crazy familiar with PostGis but I found this on StackOverflow: https://stackoverflow.com/questions/51889155/getting-all-buildings-in-range-of-5-miles-from-specified-coordinates/51889638
+		query = query.Where("ST_Distance(ST_MakePoint(lng, lat), ST_MakePoint(?, ?)) <= ?", &filters.Near[1], &filters.Near[0], MILE*100)
+	}
+
+	query = query.Order(filters.Sort)
 
 	err := query.Find(&rentals).Error
 
