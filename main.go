@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"rentals/routes"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -11,20 +12,29 @@ import (
 )
 
 func main() {
-	dsn := "host=127.0.0.1 user=root password=root dbname=testingwithrentals port=5432"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+	db, err := makeDBConnection()
+	if err != nil {
+		panic(err)
+	}
 
-	println(db, err)
-
-	router := chi.NewRouter()
-	router.Use(middleware.Logger)
-
-	router.Get("/rentals", getRentals)
-	router.Get("/rentals/{id}", getRental)
-
+	router := makeRouter(db)
 	http.ListenAndServe(":8080", router)
 }
 
-func getRental(w http.ResponseWriter, r *http.Request) {}
+func makeRouter(db gorm.DB) chi.Router {
+	r := chi.NewRouter()
+	rs := routes.PgHandle{DB: &db}
+	r.Use(middleware.Logger)
 
-func getRentals(w http.ResponseWriter, r *http.Request) {}
+	r.Get("/rentals", rs.GetRentals)
+	r.Get("/rentals/{id}", rs.GetRental)
+
+	return r
+}
+
+func makeDBConnection() (gorm.DB, error) {
+	dsn := "host=127.0.0.1 user=root password=root dbname=testingwithrentals port=5432"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+
+	return *db, err
+}
