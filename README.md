@@ -1,76 +1,49 @@
-# Coding Challenge
+## Rentals
 
-Thanks for applying for a backend role at Outdoorsy. We've put together this code challenge, which should take around 3-4 hours to complete.
+This repo contains the source for a Rentals API.
 
-## Functionality
-The task is to develop a rentals JSON API that returns a list of rentals that can be filtered, sorted, and paginated. We have included files to create a database of rentals.
+![Rental](https://giphy.com/embed/xfqDfDC2K3I3e)
 
-Your application should support the following endpoints.
+## Implementation
 
-- `/rentals/<RENTAL_ID>` Read one rental endpoint
-- `/rentals` Read many (list) rentals endpoint
-    - Supported query parameters
-        - price_min (number)
-        - price_max (number)
-        - limit (number)
-        - offset (number)
-        - ids (comma separated list of rental ids)
-        - near (comma separated pair [lat,lng])
-        - sort (string)
-    - Examples:
-        - `rentals?price_min=9000&price_max=75000`
-        - `rentals?limit=3&offset=6`
-        - `rentals?ids=3,4,5`
-        - `rentals?near=33.64,-117.93` // within 100 miles
-        - `rentals?sort=price`
-        - `rentals?near=33.64,-117.93&price_min=9000&price_max=75000&limit=3&offset=6&sort=price`
+Welcome! the implementation is mainly based on 2 libraries:
 
-The rental object JSON in the response should have the following structure:
-```json
-{
-  "id": "int",
-  "name": "string",
-  "description": "string",
-  "type": "string",
-  "make": "string",
-  "model": "string",
-  "year": "int",
-  "length": "decimal",
-  "sleeps": "int",
-  "primary_image_url": "string",
-  "price": {
-    "day": "int"
-  },
-  "location": {
-    "city": "string",
-    "state": "string",
-    "zip": "string",
-    "country": "string",
-    "lat": "decimal",
-    "lng": "decimal"
-  },
-  "user": {
-    "id": "int",
-    "first_name": "string",
-    "last_name": "string"
-  }
-}
+1. Chi - Http Router
+2. Gorm - DB ORM
+
+Building on those, it mainly was around managing query params, potential points of 
+errors, DB Query, Query Param Validation, Pagination and more. I've got to say, touching go again 
+for the first time in a while is very refreshing. Go literally gets out of the way and 
+isn't too noisy or complainy about how you do much of anything.
+
+## A few notes
+
+Hi! A few things to keep in mind:
+
+- I haven't written Go in a few years, so if there is any moments
+  of "This piece of code doesn't seem to follow go convention/style" that is why.
+
+- I'm very familiar with unit testing, and blackbox testing API's
+  (I've had to write these quite often at work). However, I did not write
+  any tests because today, I happened to have had a pretty shit day, and didn't feel up to
+  googling go api testing best practices and then reading documentation.(I currently write mostly Rust and Node/Deno server-side code)
+
+- I know the two items above aren't ideal, and I apologize about that. I hope that doesn't have an outsized impact on this opportunity, and if it does, I understand.
+
+## Instructions
+
+To run the project run:
+
+```sh
+docker compose up
 ```
 
-## Notes
-- Running `docker-compose up` will automatically generate a postgres database and some data to work with. Connect and use this database.
-- Write production ready code.
-- Please make frequent, and descriptive git commits.
-- Use third-party libraries or not; your choice.
-- Please use Golang to complete this task.
-- Feel free to add functionality as you have time, but the feature described above is the priority.
-- Please add tests
+### Potential Docker Warning/Error
 
-## What we're looking for
-- The functionality of the project matches the description above
-- An ability to think through all potential states
-- In the README of the project, describe exactly how to run the application and execute the tests
+1. If you get an error about the platform, update the platform in `docker-compose.yml` to that of your OS, I had to
+   specify the platform b/c I'm running this on a macOS M1, and docker was complaining.
 
-When complete, please push your code to Github to your own account and send the link to the project or zip the project (including the `.git` directory) and send it back.
+2. After you run the command, please wait for the `app` service to get to a healthy state, it will fail and restart, until
+   postgres is ready to take on connections.
 
-Thank you and please ask if you have any questions!
+![Thats all folks](https://giphy.com/embed/xUPOqo6E1XvWXwlCyQ)
