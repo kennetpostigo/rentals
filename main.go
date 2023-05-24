@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 	"rentals/routes"
 
 	"github.com/go-chi/chi/v5"
@@ -33,7 +35,14 @@ func makeRouter(db gorm.DB) chi.Router {
 }
 
 func makeDBConnection() (gorm.DB, error) {
-	dsn := "host=127.0.0.1 user=root password=root dbname=testingwithrentals port=5432"
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_DATABASE")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s",
+		dbHost, dbUser, dbPassword, dbName, dbPort)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 
 	return *db, err
