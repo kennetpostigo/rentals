@@ -1,8 +1,8 @@
-## Rentals
+![Rental](https://static.wikia.nocookie.net/breakingbad/images/d/d6/RV.jpg/revision/latest?cb=20130724193305)
+
+# Rentals
 
 This repo contains the source for a Rentals API.
-
-![Rental](https://giphy.com/embed/xfqDfDC2K3I3e)
 
 ## Implementation
 
@@ -11,9 +11,9 @@ Welcome! the implementation is mainly based on 2 libraries:
 1. Chi - Http Router
 2. Gorm - DB ORM
 
-Building on those, it mainly was around managing query params, potential points of 
-errors, DB Query, Query Param Validation, Pagination and more. I've got to say, touching go again 
-for the first time in a while is very refreshing. Go literally gets out of the way and 
+Building on those, it mainly was around managing query params, potential points of
+errors, DB Query, Query Param Validation, Pagination and more. I've got to say, touching go again
+for the first time in a while is very refreshing. Go literally gets out of the way and
 isn't too noisy or complainy about how you do much of anything.
 
 ## A few notes
@@ -46,4 +46,4 @@ docker compose up
 2. After you run the command, please wait for the `app` service to get to a healthy state, it will fail and restart, until
    postgres is ready to take on connections.
 
-![Thats all folks](https://giphy.com/embed/xUPOqo6E1XvWXwlCyQ)
+![Thats all folks](https://i.ytimg.com/vi/AYZz_qYw_j4/maxresdefault.jpg)
